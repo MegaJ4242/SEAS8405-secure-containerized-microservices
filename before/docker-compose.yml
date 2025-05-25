@@ -1,0 +1,31 @@
+services:
+  web:
+    build: .
+    image: mywebapp
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      - FLASK_ENV=production
+      - APP_PASSWORD=${APP_PASSWORD}
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    mem_limit: 100m
+    pids_limit: 100
+    restart: unless-stopped
+    networks:
+      - frontend
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    networks:
+      - backend
+networks:
+  frontend:
+  backend:
